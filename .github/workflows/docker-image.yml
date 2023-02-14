@@ -30,22 +30,24 @@ jobs:
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER }} #los secrets fueron creados en Git Hub| Secrets > Actions
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        NEW_vERSION: ${{ steps.version.outputs.version }}
       run: | # | -> líneas independientes
         echo "Iniciando login"
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
         echo "Fin del login"
-        echo "New Version: $NEW_vERSION!!!"
 
-    # - name: Build Docker Image
-    #   run: |
-    #     docker build -t dantalian2007/krobelus-graph:0.0.2 .
-    #     docker build -t dantalian2007/krobelus-graph:latest .
+    - name: Build Docker Image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker build -t dantalian2007/krobelus-graph:$NEW_VERSION .
+        docker build -t dantalian2007/krobelus-graph:latest .
 
-    # - name: Push Docker Image
-    #   run: |
-    #     docker push dantalian2007/krobelus-graph:0.0.2
-    #     docker push dantalian2007/krobelus-graph:latest
+    - name: Push Docker Image
+      env:
+        NEW_VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        docker push dantalian2007/krobelus-graph:$NEW_VERSION
+        docker push dantalian2007/krobelus-graph:latest
 
     # - name: Build the Docker image
     #   uses: actions/checkout@v3
