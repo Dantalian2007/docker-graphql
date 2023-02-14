@@ -18,24 +18,34 @@ jobs:
       with:
         fetch-depth: 0 # vaya bien adentro en la búsqueda
 
+    - name: Git Semantic Version
+      uses: PaulHatch/semantic-version@v4.0.3
+      with:
+        major_pattern: "major:"
+        minor_pattern: "feat:"
+        format: "${major}.${minor}.${patch}-prerelease${increment}"
+      id: version
+
     - name: Docker login
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER }} #los secrets fueron creados en Git Hub| Secrets > Actions
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        NEW_vERSION: ${{ steps.version.outputs.version }}
       run: | # | -> líneas independientes
         echo "Iniciando login"
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
         echo "Fin del login"
+        echo "New Version: $NEW_vERSION!!!"
 
-    - name: Build Docker Image
-      run: |
-        docker build -t dantalian2007/krobelus-graph:0.0.2 .
-        docker build -t dantalian2007/krobelus-graph:latest .
+    # - name: Build Docker Image
+    #   run: |
+    #     docker build -t dantalian2007/krobelus-graph:0.0.2 .
+    #     docker build -t dantalian2007/krobelus-graph:latest .
 
-    - name: Push Docker Image
-      run: |
-        docker push dantalian2007/krobelus-graph:0.0.2
-        docker push dantalian2007/krobelus-graph:latest
+    # - name: Push Docker Image
+    #   run: |
+    #     docker push dantalian2007/krobelus-graph:0.0.2
+    #     docker push dantalian2007/krobelus-graph:latest
 
     # - name: Build the Docker image
     #   uses: actions/checkout@v3
