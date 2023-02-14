@@ -30,10 +30,12 @@ jobs:
     - name: Build Docker Image
       run: |
         docker build -t dantalian2007/krobelus-graph:0.0.2 .
+        docker build -t dantalian2007/krobelus-graph:latest .
 
     - name: Push Docker Image
       run: |
         docker push dantalian2007/krobelus-graph:0.0.2
+        docker push dantalian2007/krobelus-graph:latest
 
     # - name: Build the Docker image
     #   uses: actions/checkout@v3
